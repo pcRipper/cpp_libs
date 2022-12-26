@@ -47,7 +47,8 @@ public:
 	void add(T& element);
 	void remove(size_t index);
 	void show(string start, string separator, string end);
-	void show_1();
+	void showComma();
+	void showLine();
 	int indexOf(T& obj);
 	size_t count(bool (*comparer)(const T&));
 	void mapIn(T* (*functor)(const T&));
@@ -190,8 +191,14 @@ void Array<T>::show(string start, string separator, string end) {
 }
 
 template<class T>
-void Array<T>::show_1() {
+void Array<T>::showComma() {
 	show(to_string(getSize()) + " : ", ", ", "\b\b;\n");
+}
+
+template<class T>
+inline void Array<T>::showLine()
+{
+	show(to_string(getSize()) + " :\n\t", "\n\t", "\r;\n");
 }
 
 template <class T>
