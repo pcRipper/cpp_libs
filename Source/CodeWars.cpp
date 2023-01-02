@@ -102,12 +102,23 @@ long properFractions(long n)
 	for (int k = 0; k < divisors.size(); k++) {
 
 		for (int j = k - 1; 0 <= j; j--) {
-			result += n / divisors[k]*divisors[j];
-			cout << divisors[k] << " x " << divisors[j] << " -> " << lcm(divisors[k], divisors[j]) << " = " << n / divisors[k] * divisors[j] << endl;
+			result += n / (divisors[k]*divisors[j]);
 		}
 
 		result -= n / divisors[k];
 	}
 
 	return result;
+}
+
+long properFractionsR(long n)
+{
+	vector<int> divisors = getDivisors(n);
+	long count = 1;
+
+	for (int k = 2; k < n; k++) {
+		if (divisors.end() == find_if(divisors.begin(), divisors.end(), [k](const int& e) {return k % e == 0; }))count++;
+	}
+
+	return count;
 }

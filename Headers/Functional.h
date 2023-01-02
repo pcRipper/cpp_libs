@@ -5,6 +5,7 @@ template <class T>
 void show_vector(const vector<T>& vector,string start, string separator, string end) {
 	if (vector.size() < 1){
 		cout << "empty vector\n";
+		return;
 	}
 
 	cout << start;
@@ -12,6 +13,16 @@ void show_vector(const vector<T>& vector,string start, string separator, string 
 		cout << element << separator;
 	}
 	cout << end;
+}
+
+template <class T>
+void show_vector_commas(const vector<T>& vector) {
+	show_vector(vector,to_string(vector.size()) + " : ",", ","\b\b;\n");
+}
+
+template <class T>
+void show_vector_lines(const vector<T>& vector) {
+	show_vector(vector, vector.size() + " :\n", "\n\t", "\r;\n");
 }
 
 template<class T>

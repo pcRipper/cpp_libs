@@ -1,7 +1,7 @@
 #pragma once
 #include "../Headers/Sets.h"
 
-size_t setSubs2(int* arr, size_t size, size_t end, size_t start = 1) {
+size_t setSubs2(int* arr, size_t size, size_t end, size_t start) {
     size_t count = 0;
 
     for (int currentSize = start; currentSize <= end; currentSize++) {
