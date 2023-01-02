@@ -1,5 +1,5 @@
 #pragma once
-#include "Pair.h"
+#include "../Headers/Pair.h"
 
 template<class Key,class Value>
 Pair<Key,Value>::Pair(Key key, Value) :key(key), value(value) {};

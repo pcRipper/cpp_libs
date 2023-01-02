@@ -1,9 +1,5 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include <fstream>
-
-using namespace std;
+#include "includes.h"
 
 template <class Key, class Value>
 struct Pair {

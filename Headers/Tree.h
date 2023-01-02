@@ -1,8 +1,6 @@
 #pragma once
-#include <iostream>
-#include <functional>
 #include "List.h"
-using namespace std;
+#include "includes.h"
 
 #pragma region Node<T>
 

@@ -1,7 +1,5 @@
 #pragma once
-#include <iostream>
-#include <string>
-using namespace std;
+#include "includes.h"
 
 template<class T>
 class ListNode {

@@ -1,5 +1,5 @@
 #pragma once
-#include "../CodeWars.h"
+#include "../Headers/CodeWars.h"
 
 map<char, string> shift = {
 	{'1',"124"},

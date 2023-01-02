@@ -1,6 +1,5 @@
 #pragma once
-#include <iostream>
-using namespace std;
+#include "includes.h"
 
 template<class T>
 struct Point {

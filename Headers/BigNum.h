@@ -1,9 +1,5 @@
 #pragma once
-#include <vector>
-#include <iostream>
-#include <algorithm>
-
-using namespace std;
+#include "includes.h"
 
 struct numPair{
 public:

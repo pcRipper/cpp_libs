@@ -1,10 +1,7 @@
 #pragma once
-#include <string>
 #include "Date.h"
 #include "List.h"
-#include <iostream>
-
-using namespace std;
+#include "includes.h"
 
 template <class T>
 string by3(const  T& obj) {

@@ -1,9 +1,6 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include <fstream>
-
-using namespace std;
+#include "includes.h"
+#include "Functional.h"
 
 string to_string(string text);
 
@@ -18,12 +15,11 @@ public:
 };
 
 template <class T>
-void SWAP(T& left, T& right);
-
-string split(string& text, size_t& pos, char symbol, bool shift = 1);
-
-template <class T>
-void showArray(T* array, size_t size, string separator = ", ", string end = "\b\b;\n");
+void SWAP(T& left, T& right) {
+	T time = T(left);
+	left = *new T(right);
+	right = *new T(time);
+}
 
 #pragma region Array<T>
 

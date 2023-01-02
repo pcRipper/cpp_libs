@@ -1,19 +1,5 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
-#include <algorithm>
-#include <list>
-
-using namespace std;
-
-template <class T>
-void show_vector(const vector<T>& vector) {
-	for (T element : vector) {
-		cout << element << endl;
-	}
-}
+#include "includes.h"
 
 vector<string> get_pins(string observed);
 int twoLastDigits(int a, int b);

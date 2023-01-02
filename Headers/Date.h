@@ -1,10 +1,5 @@
 #pragma once
-
-#include <string>
-#include <ctime>
-#include <iostream>
-
-using namespace std;
+#include "includes.h"
 
 class date {
 	static const uint8_t months_lengths[12];
