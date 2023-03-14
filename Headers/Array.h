@@ -1,8 +1,8 @@
 #pragma once
 #include "includes.h"
-#include "Functional.h"
+#include "functional.h"
 
-string to_string(string text);
+std::string to_string(std::string text);
 
 class Range {
 public:
@@ -38,8 +38,8 @@ public:
 	/// fillers
 	void fill_element(T element);
 	//void fill_index(T(*functor)(size_t)); <- old version
-	void fill_index(function<T(const size_t)> functor = [](const size_t x) { return x; });
-	void read_file(string file_path, string key_word, function<T* (string)> parser);
+	void fill_index(std::function<T(const size_t)> functor = [](const size_t x) { return x; });
+	void read_file(std::string file_path, std::string key_word, std::function<T* (std::string)> parser);
 
 	/// sets && gets
 	void set_size(size_t size);
@@ -48,12 +48,12 @@ public:
 	size_t getSize() { return(size); }
 
 	/// add && remove
-	void add(T& element);
+	void add(T & element);
 	void remove(size_t index);
 	void clean() { delete[] array; array = nullptr; size = 0; }
 
 	/// show
-	void show(string start, string separator, string end);
+	void show(std::string start, std::string separator, std::string end);
 	void showComma();
 	void showLine();
 
@@ -63,17 +63,17 @@ public:
 	T* most(bool (*comparer)(const T&, const T&));
 	T* mostN(bool (*comparer)(const T&, const T&), size_t index = 0);*/
 
-	size_t count(function <bool (const T&)> comparer);
-	T* most(function <bool (const T&, const T&)> comparer);
-	T* mostN(function <bool(const T&, const T&)> comparer, size_t index = 0);
-	Array<T>* filter(function <bool(const T&)> comparer);
+	size_t count(std::function <bool (const T&)> comparer);
+	T* most(std::function <bool (const T&, const T&)> comparer);
+	T* mostN(std::function <bool(const T&, const T&)> comparer, size_t index = 0);
+	Array<T>* filter(std::function <bool(const T&)> comparer);
 
 	///transformers
 	//template <class F> Array<F>* mapOn(F* (*functor)(const T&)); <- old version
 	//void mapIn(T* (*functor)(const T&)); <- old version
 
-	template <class F> Array<F>* mapOn(function <F* (const T&)> functor);
-	void mapIn(function<T* (const T&)> functor);
+	template <class F> Array<F>* mapOn(std::function <F* (const T&)> functor);
+	void mapIn(std::function<T* (const T&)> functor);
 
 	///sort
 	//void qSort(bool (*comparer)(const T&, const T&), void (*swap)(T&, T&) = std::swap); <- old version
@@ -82,19 +82,19 @@ public:
 	//void insertSort(bool (*comparer)(const T&, const T&), void (*swap)(T&, T&) = std::swap); <- old version
 	//void mergeSort(bool (*comparer)(const T&, const T&)); <- old version
 
-	void qSort(function<bool(const T&, const T&)> comparer, function<void(T&, T&)> swap = std::swap);
-	void bubbleSort(function<bool(const T&, const T&)> comparer, function<void(T&, T&)> swap = std::swap);
-	void pickSort(function<bool(const T&, const T&)> comparer, function<void(T&, T&)> swap = std::swap);
-	void insertSort(function<bool(const T&, const T&)> comparer, function<void(T&, T&)> swap = std::swap);
-	void mergeSort(function<bool(const T&, const T&)> comparer);
+	void qSort(std::function<bool(const T&, const T&)> comparer, std::function<void(T&, T&)> swap = std::swap);
+	void bubbleSort(std::function<bool(const T&, const T&)> comparer, std::function<void(T&, T&)> swap = std::swap);
+	void pickSort(std::function<bool(const T&, const T&)> comparer, std::function<void(T&, T&)> swap = std::swap);
+	void insertSort(std::function<bool(const T&, const T&)> comparer, std::function<void(T&, T&)> swap = std::swap);
+	void mergeSort(std::function<bool(const T&, const T&)> comparer);
 
 private:
 
 	//void mergeSortHelper(bool (*comparer)(const T&, const T&), size_t l, size_t r); <- old version
 	//void hoareSort(bool (*comparer)(const T&, const T&), void (*swap)(T&, T&), int l, int r); <- old version
 
-	void mergeSortHelper(function<bool(const T&, const T&)> comparer, size_t l, size_t r);
-	void hoareSort(function<bool(const T&, const T&)> comparer, function<void(T&, T&)> swap, int l, int r);
+	void mergeSortHelper(std::function<bool(const T&, const T&)> comparer, size_t l, size_t r);
+	void hoareSort(std::function<bool(const T&, const T&)> comparer, std::function<void(T&, T&)> swap, int l, int r);
 
 	//size_t quick_select_sort(bool (*comparer)(const T&, const T&), void (*swap)(T&, T&), size_t l, size_t r);
 	//T* quick_select(bool (*comparer)(T, T), size_t l, size_t r, size_t k);
@@ -102,7 +102,7 @@ public:
 	///operators
 	T& operator[](size_t index);
 	void operator += (Array<T>* obj);
-	template <class T> friend ostream& operator<<(ostream& out, Array<T> obj);
+	template <class T> friend std::ostream& operator<<(std::ostream& out, Array<T> obj);
 	~Array() { delete[] array; };
 };
 
@@ -146,7 +146,7 @@ template <class T>
 T* Array<T>::getPart_array(size_t from, size_t to) {
 
 	from = (from > size) ? 0 : from;
-	to = min(to, size);
+	to = std::min(to, size);
 
 	T* newArray = new T[1 + to - from];
 
@@ -163,7 +163,7 @@ void Array<T>::fill_element(T element) {
 }
 
 template <class T>
-void Array<T>::fill_index(function<T (const size_t)> functor) {
+void Array<T>::fill_index(std::function<T (const size_t)> functor) {
 	for (size_t k = 0; k < size; k++) {
 		array[k] = *new T(functor(k));
 	}
@@ -171,13 +171,19 @@ void Array<T>::fill_index(function<T (const size_t)> functor) {
 
 template<class T>
 void Array<T>::set_size(size_t size) {
-	T* previous = array;
-	array = new T[size];
 
-	size_t copying = min(size, this->size);
+	T* previous = this->array;
+	this->array = new T[size];
 
-	for (size_t k = 0; k < copying; k++) {
-		array[k] = *new T(previous[k]);
+	size_t copying = std::min(size, this->size);
+
+	if (std::is_compound<T>::value) {
+		for (size_t k = 0; k < copying; k++) {
+			array[k] = *new T(previous[k]);
+		}
+	}
+	else {
+		memcpy(this->array, previous, copying);
 	}
 
 	this->size = size;
@@ -189,7 +195,13 @@ void Array<T>::add(T & element) {
 
 	set_size(size + 1);
 
-	array[size - 1] = *new T(element);
+	if (std::is_compound<T>::value) {
+		array[size - 1] = T(element);
+	}
+	else {
+		array[size - 1] = T(element);
+	}
+
 }
 
 template <class T>
@@ -206,23 +218,23 @@ void Array<T>::remove(size_t index) {
 }
 
 template<class T>
-void Array<T>::show(string start, string separator, string end) {
-	cout << start;
+void Array<T>::show(std::string start, std::string separator, std::string end) {
+	std::cout << start;
 	for (int k = 0; k < size; k++) {
-		cout << array[k] << separator;
+		std::cout << array[k] << separator;
 	}
-	cout << end;
+	std::cout << end;
 }
 
 template<class T>
 void Array<T>::showComma() {
-	show(to_string(getSize()) + " : ", ", ", "\b\b;\n");
+	show(std::to_string(getSize()) + " : ", ", ", "\b\b;\n");
 }
 
 template<class T>
 inline void Array<T>::showLine()
 {
-	show(to_string(getSize()) + " :\n\t", "\n\t", "\r;\n");
+	show(std::to_string(getSize()) + " :\n\t", "\n\t", "\r;\n");
 }
 
 template <class T>
@@ -234,7 +246,7 @@ int Array<T>::indexOf(T& obj) {
 }
 
 template <class T>
-size_t Array<T>::count(function <bool(const T&)> comparer) {
+size_t Array<T>::count(std::function <bool(const T&)> comparer) {
 	size_t count = 0;
 
 	for (int k = 0; k < size; k++) {
@@ -245,7 +257,7 @@ size_t Array<T>::count(function <bool(const T&)> comparer) {
 }
 
 template <class T>
-void Array<T>::mapIn(function<T* (const T&)> functor) {
+void Array<T>::mapIn(std::function<T* (const T&)> functor) {
 	for (int k = 0; k < size; k++) {
 		array[k] = *functor(array[k]);
 	}
@@ -253,7 +265,7 @@ void Array<T>::mapIn(function<T* (const T&)> functor) {
 
 template <class T>
 template <class F>
-Array<F>* Array<T>::mapOn(function<F* (const T&)> functor) {
+Array<F>* Array<T>::mapOn(std::function<F* (const T&)> functor) {
 	Array<F>* result = new Array<F>(size);
 
 	for (size_t k = 0; k < size; k++) {
@@ -264,12 +276,12 @@ Array<F>* Array<T>::mapOn(function<F* (const T&)> functor) {
 }
 
 template<class T>
-void Array<T>::read_file(string file_path, string key_word, function<T* (string)> parser) {
-	ifstream file(file_path);
+void Array<T>::read_file(std::string file_path, std::string key_word, std::function<T* (std::string)> parser) {
+	std::ifstream file(file_path);
 
 	if (file.is_open()) {
 
-		string line;
+		std::string line;
 
 		while (!file.eof()) {
 
@@ -277,7 +289,7 @@ void Array<T>::read_file(string file_path, string key_word, function<T* (string)
 
 			size_t pos = ((key_word == "") ? 0 : line.find(key_word));
 
-			if (pos != string::npos && line.length() > key_word.length()) {
+			if (pos != std::string::npos && line.length() > key_word.length()) {
 
 				pos += key_word.length();
 				T* res = parser(line.substr(pos, line.length() - pos));
@@ -292,7 +304,7 @@ void Array<T>::read_file(string file_path, string key_word, function<T* (string)
 }
 
 template <class T>
-void Array<T>::bubbleSort(function<bool(const T&, const T&)> comparer, function<void(T&, T&)> swap) {
+void Array<T>::bubbleSort(std::function<bool(const T&, const T&)> comparer, std::function<void(T&, T&)> swap) {
 	for (int k = 1, j; k < size - 1; ++k) {
 		for (j = 1; j < size; ++j) {
 			if (comparer(array[j], array[j - 1]))swap(array[j], array[j - 1]);
@@ -301,7 +313,7 @@ void Array<T>::bubbleSort(function<bool(const T&, const T&)> comparer, function<
 }
 
 template <class T>
-void Array<T>::pickSort(function<bool(const T&, const T&)> comparer, function<void(T&, T&)> swap) {
+void Array<T>::pickSort(std::function<bool(const T&, const T&)> comparer, std::function<void(T&, T&)> swap) {
 	for (int k = 0; k < size; ++k) {
 		int b = k;
 		for (int j = k; j < size; ++j) {
@@ -312,7 +324,7 @@ void Array<T>::pickSort(function<bool(const T&, const T&)> comparer, function<vo
 }
 
 template <class T>
-void Array<T>::insertSort(function<bool(const T&, const T&)> comparer, function<void(T&, T&)> swap) {
+void Array<T>::insertSort(std::function<bool(const T&, const T&)> comparer, std::function<void(T&, T&)> swap) {
 	for (int j = 1; j < size; j++) {
 		for (int i = j; i != 0 && comparer(array[i], array[i - 1]); i--) {
 			swap(array[i], array[i - 1]);
@@ -321,12 +333,12 @@ void Array<T>::insertSort(function<bool(const T&, const T&)> comparer, function<
 }
 
 template <class T>
-void Array<T>::mergeSort(function<bool(const T&, const T&)> comparer) {
+void Array<T>::mergeSort(std::function<bool(const T&, const T&)> comparer) {
 	mergeSortHelper(comparer, 0, size - 1);
 }
 
 template <class T>
-void Array<T>::mergeSortHelper(function<bool(const T&, const T&)> comparer, size_t l, size_t r) {
+void Array<T>::mergeSortHelper(std::function<bool(const T&, const T&)> comparer, size_t l, size_t r) {
 
 	size_t middle = (l + r) / 2;
 
@@ -348,12 +360,12 @@ void Array<T>::mergeSortHelper(function<bool(const T&, const T&)> comparer, size
 }
 
 template <class T>
-void Array<T>::qSort(function<bool(const T&, const T&)> comparer, function<void(T&, T&)> swap) {
+void Array<T>::qSort(std::function<bool(const T&, const T&)> comparer, std::function<void(T&, T&)> swap) {
 	hoareSort(comparer, swap ,0, size - 1);
 }
 
 template <class T>
-void Array<T>::hoareSort(function<bool(const T&, const T&)> comparer, function<void(T&, T&)> swap, int l, int r) {
+void Array<T>::hoareSort(std::function<bool(const T&, const T&)> comparer, std::function<void(T&, T&)> swap, int l, int r) {
 	if (0 < size && l < r) {
 		T x = array[(l+r)/2];
 		int i = l, j = r;
@@ -386,7 +398,7 @@ void Array<T>::hoareSort(function<bool(const T&, const T&)> comparer, function<v
 //}
 
 template <class T>
-T* Array<T>::most(function <bool(const T&, const T&)> comparer) {
+T* Array<T>::most(std::function <bool(const T&, const T&)> comparer) {
 	size_t index = 0;
 
 	for (size_t k = 1; k < size; k++) {
@@ -400,7 +412,7 @@ T* Array<T>::most(function <bool(const T&, const T&)> comparer) {
 }
 
 template <class T>
-T* Array<T>::mostN(function <bool(const T&, const T&)> comparer, size_t index) {//a lot of memory(rewrite)
+T* Array<T>::mostN(std::function <bool(const T&, const T&)> comparer, size_t index) {//a lot of memory(rewrite)
 	Array<T> sorted = Array<T>(*this);
 
 	sorted.qSort(comparer);
@@ -410,7 +422,7 @@ T* Array<T>::mostN(function <bool(const T&, const T&)> comparer, size_t index) {
 }
 
 template <class T>
-Array<T>* Array<T>::filter(function <bool(const T&)> comparer) {
+Array<T>* Array<T>::filter(std::function <bool(const T&)> comparer) {
 	Array<T>* result = new Array<T>();
 
 	for (size_t k = 0; k < this->size; k++) {
@@ -443,14 +455,14 @@ void Array<T>::operator+=(Array<T>* obj) {
 }
 
 template <class T>
-ostream& operator<<(ostream& out, Array<T> obj) {
+std::ostream& operator<<(std::ostream& out, Array<T> obj) {
 	out << to_string(obj);
 	return out;
 }
 
 template <class T>
-string to_string(Array<T>& obj) {
-	string result = "";
+std::string to_string(Array<T>& obj) {
+	std::string result = "";
 
 	if (obj.getSize() == 0)result = "empty array";
 	else {
@@ -481,10 +493,10 @@ public:
 	void fill_function(T(*functor)());
 	void fill_element(T element);
 	void setSize(size_t rows, size_t columns);
-	void show(string separator);
+	void show(std::string separator);
 	void sort(bool (*comparer)(const T&, const T&));
 	void sortRows(bool (*comparer)(const T&, const T&));
-	void read_file(string file_path, char separator, T(*parser)(string));
+	void read_file(std::string file_path, char separator, T(*parser)(std::string));
 	Array<T>& operator[](size_t index);
 private:
 	void set_columns(size_t size);
@@ -523,7 +535,7 @@ Matrix<T>::Matrix(Matrix<T>* obj, bool del_obj) {
 template <class T>
 void Matrix<T>::fill_function(T(*functor)()) {
 	for (size_t r = 0; r < rows; r++) {
-		matrix[r].fill_function(functor);
+		matrix[r].fill_std::function(functor);
 	}
 }
 
@@ -570,12 +582,12 @@ void Matrix<T>::set_rows(size_t size) {
 }
 
 template <class T>
-void Matrix<T>::show(string separator) {
-	cout << rows << "x" << matrix[0].getSize() << " :\n";
+void Matrix<T>::show(std::string separator) {
+	std::cout << rows << "x" << matrix[0].getSize() << " :\n";
 	for (size_t r = 0; r < rows; r++) {
 		matrix[r].show("", separator, "\n");
 	}
-	cout << "\n\n";
+	std::cout << "\n\n";
 }
 
 template <class T>
@@ -595,12 +607,12 @@ void Matrix<T>::sort(bool (*comparer)(const T&, const T&)) {
 }
 
 template <class T>
-void Matrix<T>::read_file(string file_path, char separator, T(*parser)(string)) {
-	ifstream file(file_path);
+void Matrix<T>::read_file(std::string file_path, char separator, T(*parser)(std::string)) {
+	std::ifstream file(file_path);
 
 	if (file.is_open()) {
 
-		string line;
+		std::string line;
 
 		for (size_t r = 0; !file.eof(); r++) {
 

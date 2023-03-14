@@ -17,4 +17,4 @@
 
 #include <functional>
 
-using namespace std;
+#include <type_traits>
