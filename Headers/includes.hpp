@@ -13,8 +13,9 @@
 #include <set>
 #include <map>
 #include <list>
-#include <algorithm>
+#include <queue>
 
+#include <algorithm>
 #include <functional>
 
 #include <type_traits>

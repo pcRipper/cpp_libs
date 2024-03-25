@@ -1,5 +1,5 @@
 #pragma once
-#include "includes.h"
+#include "includes.hpp"
 
 struct numPair{
 public:
@@ -10,27 +10,27 @@ public:
 	numPair(int digit,size_t power);
 	
 	friend bool operator == (const numPair & left,const numPair & right);
-	friend ostream& operator<<(ostream& out,const numPair& obj);
+	friend std::ostream& operator<<(std::ostream& out,const numPair& obj);
 	~numPair();
 };
 
 class BigNum{
 	
 	bool sign;
-	vector<numPair> num;
+	std::vector<numPair> num;
 
 public:
 	
 	BigNum();
 	BigNum(long long number);
-	BigNum(string number,bool sign = true);
+	BigNum(std::string number,bool sign = true);
 //	BigNum(vector<numPair> dNumber);
 
 	void add(numPair pair);
 	void show();
 	BigNum operator*(const BigNum& obj);
 	
-	friend ostream& operator<<(ostream& out, const BigNum& obj);
+	friend std::ostream& operator<<(std::ostream& out, const BigNum& obj);
 
 	~BigNum();
 	
