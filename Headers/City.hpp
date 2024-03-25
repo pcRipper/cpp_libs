@@ -1,7 +1,7 @@
 #pragma once
-#include "Date.h"
-#include "List.h"
-#include "includes.h"
+#include "Date.hpp"
+#include "List.hpp"
+#include "includes.hpp"
 
 template <class T>
 string by3(const  T& obj) {

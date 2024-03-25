@@ -1,4 +1,4 @@
-#include "../Headers/BigNum.h"
+#include "../Headers/BigNum.hpp"
 #include <map>
 #include <functional>
 

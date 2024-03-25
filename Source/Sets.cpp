@@ -1,5 +1,5 @@
 #pragma once
-#include "../Headers/Sets.h"
+#include "../Headers/Sets.hpp"
 
 size_t setSubs2(int* arr, size_t size, size_t end, size_t start) {
     size_t count = 0;

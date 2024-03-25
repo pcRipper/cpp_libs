@@ -1,4 +1,4 @@
-#include "../Headers/Functional.h"
+#include "../Headers/Functional.hpp"
 
 size_t gcd(size_t a, size_t b)
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "../Headers/Array.h"
+#include "../Headers/Array.hpp"
 
 using namespace std;
 

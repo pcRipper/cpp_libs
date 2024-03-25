@@ -1,6 +1,6 @@
 #pragma once
-#include "includes.h"
-#include "functional.h"
+#include "includes.hpp"
+#include "Functional.hpp"
 
 std::string to_string(std::string text);
 

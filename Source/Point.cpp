@@ -1,5 +1,5 @@
 #pragma once
-#include "../Headers/Point.h"
+#include "../Headers/Point.hpp"
 
 template<class T>
 Point<T>::Point() {};
