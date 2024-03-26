@@ -49,6 +49,7 @@ public:
 
 	/// add && remove
 	void add(T & element);
+	void add(T && element);
 	void remove(size_t index);
 	void clean() { delete[] array; array = nullptr; size = 0; }
 
@@ -205,6 +206,12 @@ void Array<T>::add(T & element) {
 }
 
 template <class T>
+void Array<T>::add(T && element) {
+	set_size(size + 1);
+	array[size - 1] = std::move(element);
+}
+
+template <class T>
 void Array<T>::remove(size_t index) {
 	if (index < size) {
 		T* previous = array;
@@ -220,7 +227,7 @@ void Array<T>::remove(size_t index) {
 template<class T>
 void Array<T>::show(std::string start, std::string separator, std::string end) {
 	std::cout << start;
-	for (int k = 0; k < size; k++) {
+	for (size_t k = 0; k < size; k++) {
 		std::cout << array[k] << separator;
 	}
 	std::cout << end;
