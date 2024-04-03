@@ -20,7 +20,12 @@ public:
 
     inline void set(int position) {
         if (position >= size) return;
+        max_offset = max(max_offset, position);
         bits[position / 64] |= (1ull << (position % 64));
+    }
+
+    inline void reset(){
+        memset(bits, 0, max_offset/8 + 1);
     }
 
     BitSet<size>& operator &&(BitSet<size>& right) {
