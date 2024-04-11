@@ -1,8 +1,8 @@
 #pragma once
 
-template<int size, class Type>
+template<int size, class Type = int>
 class StaticStack{
-    static Type stack[size];
+    Type stack[size];
     int currentSize;
 
     static constexpr int MAX_SIZE = size;
@@ -39,8 +39,11 @@ public:
         currentSize = 0;
     }
 
+    Type& operator[](int index) {
+        static Type defaultValue = Type();
+        if(index >= currentSize)return defaultValue;
+        return stack[index];
+    }
+
     ~StaticStack() = default;
 };
-
-template<int size, class Type>
-Type StaticStack<size, Type>::stack[size];
