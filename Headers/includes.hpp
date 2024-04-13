@@ -18,6 +18,7 @@
 #include <deque>
 #include <queue>
 #include <stack>
+#include <array>
 
 #include <algorithm>
 #include <functional>
