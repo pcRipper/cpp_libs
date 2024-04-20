@@ -24,6 +24,12 @@ public:
         bits[position / 64] |= (1ull << (position % 64));
     }
 
+    inline void unset(int position) {
+        static const uint64_t MASK = 0xFFFFFFFFFFFFFFFF;
+        if(position >= size)return;
+        bits[position / 64] &= (MASK ^ (1ull << (position % 64)));
+    }
+
     inline void reset(){
         memset(bits, 0, max_offset/8 + 1);
     }
