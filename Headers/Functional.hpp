@@ -1,6 +1,8 @@
 #pragma once
 #include "includes.hpp"
 
+namespace customFunctions {
+
 template <class T>
 void show_vector(const std::vector<T>& vector,std::string start, std::string separator, std::string end) {
 	if (vector.size() < 1){
@@ -47,3 +49,15 @@ size_t gcd(size_t a, size_t b);
 size_t lcm(size_t a, size_t b);
 
 std::string split(std::string& text, size_t& pos, char symbol, bool shift = 1);
+
+template <class Type>
+uintptr_t pointerToInt(Type* ptr) {
+	return reinterpret_cast<uintptr_t>(ptr);
+}
+
+template <class Type>
+Type* intToPointer(uintptr_t intPtr){
+	return reinterpret_cast<Type*>(intPtr);
+}
+
+}

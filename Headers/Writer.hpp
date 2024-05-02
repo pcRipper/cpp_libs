@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 
+/// @brief Simple class, designed for 1 purpose - write some data in a file
 class Writer{
     std::fstream stream;
 public:
