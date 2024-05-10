@@ -157,7 +157,7 @@ public:
 
         const int LEN = static_cast<int>(word.length());
         int max_count = 0;
-        for(int i = 0; i + k <= LEN; ++i){
+        for(int i = 0; i + k <= LEN; i += k){
             max_count = max(max_count, ++count[word.substr(i, k)]);
         }
 
