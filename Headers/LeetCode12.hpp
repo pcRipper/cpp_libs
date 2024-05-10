@@ -151,7 +151,18 @@ public:
         };
     }
 
-    //this was the last task
+    //3137. Minimum Number of Operations to Make Word K-Periodic
+    int minimumOperationsToMakeKPeriodic(string word, int k) {
+        unordered_map<string, int> count;
+
+        const int LEN = static_cast<int>(word.length());
+        int max_count = 0;
+        for(int i = 0; i + k <= LEN; ++i){
+            max_count = max(max_count, ++count[word.substr(i, k)]);
+        }
+
+        return LEN / k - max_count;
+    }
 
 };
 
