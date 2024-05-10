@@ -8,29 +8,35 @@ template <int capacity, class Type = int>
 class StaticArray {
 public:
     using ValueType = Type;
-    using Iterator = ContinuousIterator<StaticArray<capacity, Type>>;
+    using ContainerType = StaticArray<capacity, Type>;
+    using Iterator = ContinuousIterator<ContainerType>;
+    static const int max_capacity = capacity;
 protected:
-    Type array[capacity];
+    Type array[max_capacity];
     int currentSize;
 
     static Type defaultValue;
 public:
     StaticArray(){
         currentSize = 0;
-        memset(array, 0, sizeof(Type) * capacity);
+        memset(array, 0, sizeof(Type) * ContainerType::max_capacity);
     }
 
     int size(){
         return currentSize;
     }
 
+    int capacity(){
+        return ContainerType::max_capacity;
+    }
+
     virtual void push_back(Type element){
-        if(currentSize == capacity)return;
+        if(currentSize == ContainerType::max_capacity)return;
         array[currentSize++] = element;
     }
 
     virtual void emplace_back(Type&& element){
-        if(currentSize == capacity)return;
+        if(currentSize == ContainerType::max_capacity)return;
         array[currentSize++] = std::move(element);
     }
 
@@ -45,7 +51,7 @@ public:
     }
 
     virtual Type& operator[](int index){
-        if(index >= capacity)return defaultValue;
+        if(index >= ContainerType::max_capacity)return defaultValue;
         return array[index];
     }
 

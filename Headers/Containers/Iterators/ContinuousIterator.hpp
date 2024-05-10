@@ -52,4 +52,20 @@ public:
     ContinuousIterator& operator-(int offset){
         return *new StackIterator(pointer - x);
     }
+
+    bool operator<(const ContinuousIterator& right){
+        return pointer < right.pointer;
+    }
+
+    bool operator>(const ContinuousIterator& right){
+        return pointer > right.pointer;
+    }
+
+    bool operator<=(const ContinuousIterator& right){
+        return pointer <= right.pointer;
+    }
+
+    bool operator>=(const ContinuousIterator& right){
+        return pointer >= right.pointer;
+    }
 };
