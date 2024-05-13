@@ -1,7 +1,7 @@
 #pragma once
 #include "includes.hpp"
 
-namespace customFunctions {
+namespace Functions {
 
 	template <class T>
 	void show_vector(const std::vector<T>& vector,std::string start, std::string separator, std::string end) {
@@ -61,10 +61,11 @@ namespace customFunctions {
 	}
 
 	template <class Type, class Output>
-	vector<Output> map(vector<Type> vector, function<Output(Type)> functor){
-		vector<Output> result;
+	vector<Output> map(vector<Type> container, function<Output(Type)> functor){
+		vector<Output> result = {};
+		result.reserve(container.size());
 
-		for(const auto& element : vector){
+		for(const auto& element : container){
 			result.emplace_back(functor(element));
 		}	
 

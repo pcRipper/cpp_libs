@@ -135,6 +135,14 @@ void Set<TArr>::drop(SubSet* startObject) {
     }
 }
 
+
+/// @brief This function generates all possible subsets from set, starting from start size, ending on end size, example : subset -> [1,2,3], from 1 to 2 in size, result -> [[1],[2],[3],[1,2],[1,3],[2,3]] 
+/// @tparam TArr template param for object type in the sets 
+/// @param object collection of generated sets
+/// @param size size of passing array
+/// @param arr passing array of elements
+/// @param end end size of generating subsets
+/// @param start start size of generating subsets
 template <typename TArr>
 void setSubs(Set<TArr>& object, int size, TArr* arr,int end,int start = 1) {
     if (size > 0 && arr != nullptr && 0 < start && start <= size && 0 < end && end <= size && start <= end) {

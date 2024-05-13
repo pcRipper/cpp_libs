@@ -59,11 +59,11 @@ public:
         currentSize = 0;
     }
 
-    virtual Iterator begin(){
+    Iterator begin(){
         return Iterator(array);
     }
     
-    virtual Iterator end(){
+    Iterator end(){
         return Iterator(array + currentSize);
     }
 

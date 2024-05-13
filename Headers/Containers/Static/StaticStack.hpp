@@ -1,41 +1,45 @@
 #pragma once
 #include "StaticArray.hpp"
+#include "../Iterators/ReversedContinuousIterator.hpp"
 
 /// @brief  Stack with predefined max size
 /// @tparam Type 
 /// @tparam Size sets max size of the stack
 /// @tparam Offset sets offset from start of the stack(0 index), indexing will be computed so : stack[index_required + offset]  
 template<int capacity, class Type = int, int offset = 0>
-class StaticStack : private StaticArray<capacity, Type> {
+class StaticStack : protected StaticArray<capacity, Type> {
 public:
+    using ValueType = Type;
     using BaseClassType = StaticArray<capacity, Type>;
+    using ContainerType = StaticStack<capacity, Type>;
+    using Iterator = ReversedContinuousIterator<ContainerType>;
 protected:
     static constexpr int MAX_SIZE = capacity - offset;
 public:
     StaticStack():
-        StaticArray()
+        BaseClassType()
     {};
-
+    
     void push(Type element){
-        if(currentSize >= MAX_SIZE)return;
-        array[currentSize++ + offset] = element;
+        if(BaseClassType::currentSize >= MAX_SIZE)return;
+        BaseClassType::array[BaseClassType::currentSize++ + offset] = element;
     }
 
     void emplace(Type&& element){
-        if(currentSize >= MAX_SIZE)return;
-        array[currentSize++ + offset] = std::move(element);
+        if(BaseClassType::currentSize >= MAX_SIZE)return;
+        BaseClassType::array[BaseClassType::currentSize++ + offset] = std::move(element);
     }
 
     Type& top(){
-        return currentSize == 0
+        return BaseClassType::currentSize == 0
             ? BaseClassType::defaultValue
-            : array[currentSize - 1 + offset]
+            : BaseClassType::array[BaseClassType::currentSize - 1 + offset]
         ;
     }
 
     Type pop(){
-        auto top = back();
-        currentSize -= 1;
+        auto top = BaseClassType::back();
+        BaseClassType::currentSize -= 1;
         return top;
     }
 
@@ -51,12 +55,12 @@ public:
         return BaseClassType::operator[](index + offset);
     }
 
-    Iterator begin() override {
-        return Iterator(array + offset);
+    Iterator begin() {
+        return Iterator(BaseClassType::array + offset + BaseClassType::currentSize - 1);
     }
 
-    Iterator end() override {
-        return Iterator(array + offset + currentSize);
+    Iterator end() {
+        return Iterator(BaseClassType::array + offset - 1);
     }
 
     ~StaticStack() = default;
