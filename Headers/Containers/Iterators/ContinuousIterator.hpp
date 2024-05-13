@@ -1,15 +1,14 @@
 #pragma once
 
-
 /// @brief Iterator for datastructures with continuous memory allocation block
-/// @tparam Container - is type of the container with continuous memory allocation block
+/// @tparam Container is type of the container with continuous memory allocation block
 template <class Container>
 class ContinuousIterator{
 public:
     using ValueType = typename Container::ValueType;
     using PointerType = ValueType*;
     using ReferenceType = ValueType&;
-private:
+protected:
     PointerType pointer;
 public:
     ContinuousIterator() = delete;
@@ -18,39 +17,39 @@ public:
         pointer(ptr)
     {};
 
-    ContinuousIterator& operator++(){
+    virtual ContinuousIterator& operator++(){
         ++pointer;
         return *this;
     }
 
-    ContinuousIterator& operator++(int){
-        auto tmp = *this;
+    virtual ContinuousIterator& operator++(int){
+        auto tmp = new ContinuousIterator(pointer);
         ++pointer;
-        return tmp;
+        return *tmp;
     }
 
-    PointerType operator->(){
+    virtual PointerType operator->(){
         return pointer;
     }
 
-    ReferenceType operator*(){
+    virtual ReferenceType operator*(){
         return *pointer;
     }
 
-    bool operator==(const ContinuousIterator& right) const {
+    virtual bool operator==(const ContinuousIterator& right) const {
         return pointer == right.pointer;
     }
 
-    bool operator!=(const ContinuousIterator& right) const {
+    virtual bool operator!=(const ContinuousIterator& right) const {
         return pointer != right.pointer;
     }
 
-    ContinuousIterator& operator+(int offset){
-        return *new StackIterator(pointer + x);
+    virtual ContinuousIterator& operator+(int offset){
+        return *new ContinuousIterator(pointer + offset);
     }
 
-    ContinuousIterator& operator-(int offset){
-        return *new StackIterator(pointer - x);
+    virtual ContinuousIterator& operator-(int offset){
+        return *new ContinuousIterator(pointer - offset);
     }
 
     bool operator<(const ContinuousIterator& right){
