@@ -1,5 +1,6 @@
 #pragma once
 #include "../Iterators/ContinuousIterator.hpp"
+#include "../Iterators/ReversedContinuousIterator.hpp"
 
 /// @brief Array with predefined max size
 /// @tparam Type Generic content type of the array
@@ -9,7 +10,10 @@ class StaticArray {
 public:
     using ValueType = Type;
     using ContainerType = StaticArray<capacity, Type>;
-    using Iterator = ContinuousIterator<ContainerType>;
+    //Forwar iterator
+    using ForwardIterator = ContinuousIterator<ContainerType>;
+    //Reversed iterator
+    using ReversedIterator = ReversedContinuousIterator<ContainerType>;
     static const int max_capacity = capacity;
 protected:
     Type array[max_capacity];
@@ -59,12 +63,20 @@ public:
         currentSize = 0;
     }
 
-    Iterator begin(){
-        return Iterator(array);
+    ForwardIterator begin(){
+        return ForwardIterator(array);
     }
     
-    Iterator end(){
-        return Iterator(array + currentSize);
+    ForwardIterator end(){
+        return ForwardIterator(array + currentSize);
+    }
+
+    ReversedIterator rbegin(){
+        return ReversedIterator(array + currentSize - 1);
+    }
+
+    ReversedIterator rend(){
+        return ReversedIterator(array - 1);
     }
 
     virtual ~StaticArray() = default;

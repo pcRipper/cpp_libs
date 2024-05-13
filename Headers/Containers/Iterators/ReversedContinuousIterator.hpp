@@ -51,4 +51,6 @@ public:
     }
 };
 
-#define RCI ReversedContinuousIterator;
+#ifndef RCI
+    #define RCI ReversedContinuousIterator;
+#endif
