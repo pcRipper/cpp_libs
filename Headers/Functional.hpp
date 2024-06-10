@@ -72,4 +72,11 @@ namespace Functions {
 		return result;
 	}
 
+	template <class Outputable>
+	std::string extract_from_operator(const Outputable & obj){
+		static std::ostringstream capture_stream;
+		capture_stream << obj;
+		return capture_stream.str();
+	}
+
 }
