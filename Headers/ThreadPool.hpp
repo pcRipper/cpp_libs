@@ -1,50 +1,98 @@
 #pragma once
 
-#include <Containers/Dynamic/ThreadSafeDeque.hpp>
-
 #include <thread>
 #include <atomic>
 #include <functional>
-#include <list>
 #include <array>
+#include <vector>
+#include <condition_variable>
+#include <memory>
 
-template <size_t threads>
-class ThreadPool :
-    public std::enable_shared_from_this<ThreadPool<threads>>
+template <size_t threads_count>
+class ThreadPool : public std::enable_shared_from_this<ThreadPool<threads_count>>
 {
 public:
-    ThreadPool(){
-        for(size_t i = 0; i < threads; ++i){
-            pool[i] = std::make_pair(
-                
-            );
-        }
+    using ClassType = ThreadPool<threads_count>;
+
+    // Static factory method to create instances
+    static std::shared_ptr<ClassType> create(){
+        std::shared_ptr<ClassType> instance(new ClassType());
+        instance->start();
+        return instance;
     }
 
-    static void TP_thread(std::shared_ptr<ThreadPool> ptr){
-        while(ptr->isRunnig()){
+    ~ThreadPool(){
+        stop();
+    }
 
+    void push(std::function<void()> task){
+        {
+            std::unique_lock<std::mutex> lock(task_mutex);
+            task_pool.push_back(task);
         }
+        task_condition.notify_one();
     }
 
     bool isRunning(){
-        std::lock_guard<std::mutex> lock(mute);
         return run;
     }
 
-    void stop(){
-        std::lock_guard<std::mutex> lock(mute);
-        run = false;
+    bool isIdle(){
+        std::unique_lock<std::mutex> lock(task_mutex);
+        return idle_count == threads_count && task_pool.empty();
     }
-private:
-    using ArrayType = std::pair<
-        std::thread,
-        ThreadSafeDeque<std::function<void()>>
-    >;
 
-    std::list<size_t> queue;
-    std::array<ArrayType, threads> pool;
-    
+    void stop(){
+        {
+            std::unique_lock<std::mutex> lock(task_mutex);
+            run = false;
+        }
+        task_condition.notify_all();
+        for(auto& th : thread_pool){
+            if(th.joinable()){
+                th.join();
+            }
+        }
+    }
+
+private:
+    ThreadPool() : run(true), idle_count(0) {}
+
+    void start(){
+        for(size_t i = 0; i < threads_count; ++i){
+            thread_pool[i] = std::thread(&ClassType::pool_worker, this);
+        }
+    }
+
+    void pool_worker(){
+        while(run){
+            idle_count += 1;
+            std::function<void()> task;
+            {
+                std::unique_lock<std::mutex> lock(task_mutex);
+                task_condition.wait(lock, [this]{
+                    return !task_pool.empty() || !run;
+                });
+
+                if(!run && task_pool.empty()){
+                    return;
+                }
+
+                task = task_pool.front();
+                task_pool.pop_front();
+            }
+            idle_count -= 1;
+            task();
+        }
+    }
+
+private:
+    std::array<std::thread, threads_count> thread_pool;
+    std::deque<std::function<void()>> task_pool;
     std::atomic<bool> run;
-    std::mutex mute;
+    std::atomic<size_t> idle_count;
+
+    std::mutex task_mutex;
+    std::condition_variable task_condition;
 };
+
