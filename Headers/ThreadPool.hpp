@@ -33,7 +33,7 @@ public:
         task_condition.notify_one();
     }
 
-    bool isRunning(){
+    bool isRunning() const {
         return run;
     }
 
@@ -96,3 +96,19 @@ private:
     std::condition_variable task_condition;
 };
 
+#include <utility>
+
+namespace ThPool{
+    /// @brief wraps a function with any context to a void-returning 0 parameters
+    /// @tparam Func 
+    /// @tparam ...Args 
+    /// @param func 
+    /// @param ...args 
+    /// @return 
+    template<typename Func, typename... Args>
+    std::function<void()> wrap(Func&& func, Args&&... args) {
+        return [func = std::forward<Func>(func), ... args = std::forward<Args>(args)]() {
+            std::invoke(func, args...);
+        };
+    }
+}
