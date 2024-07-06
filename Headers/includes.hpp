@@ -9,7 +9,6 @@
 #include <numeric>
 
 #include <string>
-#include <conio.h>
 #include <cctype>
 
 #include <vector>
