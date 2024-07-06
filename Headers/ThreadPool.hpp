@@ -7,6 +7,7 @@
 #include <vector>
 #include <condition_variable>
 #include <memory>
+#include <deque>
 
 template <size_t threads_count>
 class ThreadPool : public std::enable_shared_from_this<ThreadPool<threads_count>>
@@ -55,7 +56,7 @@ public:
         }
     }
 
-private:
+protected:
     ThreadPool() : run(true), idle_count(0) {}
 
     void start(){
@@ -86,7 +87,7 @@ private:
         }
     }
 
-private:
+protected:
     std::array<std::thread, threads_count> thread_pool;
     std::deque<std::function<void()>> task_pool;
     std::atomic<bool> run;
