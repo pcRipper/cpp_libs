@@ -15,6 +15,8 @@ private:
 public:
     PriorityFrequencies() = default;
 
+    /// @brief 
+    /// @return pair {first -> frequency of top element, second -> top element} 
     pair<int, Type> top(){
         if(queue.size() == 0)return {-1, Type()};
         
