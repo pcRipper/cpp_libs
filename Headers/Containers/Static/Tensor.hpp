@@ -1,13 +1,23 @@
 #pragma once
 
+#include <stdio.h>
+#include <exception>
+
+#include <string>
+#include <array>
+
 template <class Type, size_t dimensions>
 class Tensor{
 public:
-    using ClassType = Tensor<Type, dimensions>;
+    static_assert(dimensions > 0, "Template parameter must be greater than 0");
+public:
+    using ClassType          = Tensor<Type, dimensions>;
+    using NextDimensionType  = Tensor<Type, dimensions - 1>; 
+    friend class Tensor<Type, dimensions + 1>;
 public:
     Tensor() = delete;
 
-    Tensor(array<size_t, dimensions> const dim_sizes):
+    Tensor(std::array<size_t, dimensions> const dim_sizes):
         isNested(false)
     {
         sizes = new size_t[dimensions];
@@ -21,20 +31,19 @@ public:
     }
 
 protected:
-    static ClassType* prepareNested(array<size_t, dimensions> const sizes){
-        auto res = (ClassType*)malloc(sizeof(ClassType));
+    static NextDimensionType* prepareNested(){
+        auto res = (NextDimensionType*)malloc(sizeof(NextDimensionType));
         res->isNested = true;
         return res;
     }
 public:
 
-    ClassType& operator [](size_t index) const {
-        if(dimensions == 0)return *this;
+    auto operator [](size_t index) const {
         if(index >= sizes[0]){
-            throw exception("Indexing error: out of bounds");
+            throw std::runtime_error("Indexing error: out of bounds");
         }
 
-        auto nested = Tensor<Type, dimensions - 1>::prepareNested();
+        auto nested = prepareNested();
         nested->sizes = this->sizes + 1;
         nested->data  = &this->data[index * sizes[0]];
         nested->data_size = this->data_size / sizes[0];
@@ -42,16 +51,10 @@ public:
         return *nested;
     }
 
-    bool isElement() const {
-        return ClassType::isSingleElement;
-    }
-
-    Type& getElement(){
-        if(isElement()){
-            return *data;
+    void fill(Type const value){
+        for(size_t i = 0; i < data_size; ++i){
+            data[i] = value;
         }
-
-        throw exception("Access error : misleaded type");
     }
 
     ~Tensor(){
@@ -60,7 +63,45 @@ public:
         delete[] data;
     }
 protected:
-    static constexpr bool isSingleElement = dimensions == 0;
+    bool isNested;
+protected:
+    Type* data;
+    size_t data_size;
+    size_t* sizes;
+};
+
+template <class Type>
+class Tensor<Type, 1> {
+public:
+    using ClassType = Tensor<Type, 1>;
+    friend class Tensor<Type, 2>;
+public:
+    Tensor() = delete;
+
+    Tensor(std::array<size_t, 1> const dim_sizes):
+        isNested(false)
+    {
+        sizes = new size_t[1];
+        sizes[0] = dim_sizes[0];
+
+        data_size = dim_sizes[0];
+
+        data = new Type[data_size];
+    }
+
+    Type& operator [](size_t index) const {
+        if(index >= sizes[0]){
+            throw std::runtime_error("Indexing error: out of bounds");
+        }
+
+        return data[index];
+    }
+
+    ~Tensor(){
+        if(isNested)return;
+        delete[] sizes;
+        delete[] data;
+    }
 protected:
     bool isNested;
 protected:
