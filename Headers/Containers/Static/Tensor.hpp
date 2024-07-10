@@ -15,6 +15,8 @@ public:
     using NextDimensionType  = Tensor<Type, dimensions - 1>; 
     friend class Tensor<Type, dimensions + 1>;
 public:
+    //iterator types
+public:
     Tensor() = delete;
 
     Tensor(std::array<size_t, dimensions> const dim_sizes):
@@ -31,7 +33,7 @@ public:
     }
 
 protected:
-    static NextDimensionType* prepareNested(){
+    static NextDimensionType* prepare_nested(){
         auto res = (NextDimensionType*)malloc(sizeof(NextDimensionType));
         res->isNested = true;
         return res;
@@ -43,12 +45,16 @@ public:
             throw std::runtime_error("Indexing error: out of bounds");
         }
 
-        auto nested = prepareNested();
+        auto nested = prepare_nested();
         nested->sizes = this->sizes + 1;
         nested->data  = &this->data[index * sizes[0]];
         nested->data_size = this->data_size / sizes[0];
 
         return *nested;
+    }
+
+    size_t dimension_size(){
+        return sizes[0];
     }
 
     void fill(Type const value){
@@ -95,6 +101,16 @@ public:
         }
 
         return data[index];
+    }
+
+    size_t dimension_size(){
+        return sizes[0];
+    }
+
+    void fill(Type const value){
+        for(size_t i = 0; i < data_size; ++i){
+            data[i] = value;
+        }
     }
 
     ~Tensor(){
