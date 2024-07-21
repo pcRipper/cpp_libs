@@ -10,6 +10,7 @@
 
 #include <string>
 #include <cctype>
+#include <cstring>
 
 #include <vector>
 #include <set>
