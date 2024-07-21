@@ -1,5 +1,6 @@
 #pragma once
 #include "includes.hpp"
+#include <cstdint>
 
 namespace Functions {
 
@@ -78,5 +79,7 @@ namespace Functions {
 		capture_stream << obj;
 		return capture_stream.str();
 	}
+
+	pair<vector<int>*, vector<vector<int>>*> topological_sort(int n, vector<vector<int>> const& directedGraph);
 
 }
