@@ -92,7 +92,7 @@ public:
 	///operators
 	T& operator[](size_t index);
 	void operator += (Array<T>* obj);
-	template <class T> friend std::ostream& operator<<(std::ostream& out, Array<T> obj);
+	friend std::ostream& operator<<(std::ostream& out, Array<T> obj);
 	~Array() { delete[] array; };
 };
 
