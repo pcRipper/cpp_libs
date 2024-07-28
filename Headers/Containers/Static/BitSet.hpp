@@ -44,6 +44,22 @@ public:
         return result;
     }
 
+    BitSet<size>& operator ||(BitSet<size>& right) {
+        BitSet<size> result;
+
+        for (int i = 0; i < ARRAY_SIZE; ++i) {
+            result[i] = bits[i] | right.bits[i];
+        }
+
+        return result;
+    }
+
+    void operator |=(BitSet<size>& right) {
+        for (int i = 0; i < ARRAY_SIZE; ++i) {
+            result[i] = bits[i] | right.bits[i];
+        }
+    }
+
     bool operator ==(const BitSet<size>& right) {
 
         for (int i = 0; i < ARRAY_SIZE; ++i) {
