@@ -1,8 +1,12 @@
 #pragma once
 
-#include <stdio.h>
-#include <exception>
+#include "../Iterators/TensorIndexedIterator.hpp"
+#include "../Iterators/ContinuousIterator.hpp"
+#include "../Iterators/ReversedContinuousIterator.hpp"
 
+#include <stdio.h>
+#include <stdexcept>
+#include <cstring>
 #include <string>
 #include <array>
 
@@ -11,11 +15,11 @@ class Tensor{
 public:
     static_assert(dimensions > 0, "Template parameter must be greater than 0");
 public:
-    using ClassType          = Tensor<Type, dimensions>;
+    //general aliases
+    using ValueType          = Type;
+    using ContainerType      = Tensor<Type, dimensions>;
     using NextDimensionType  = Tensor<Type, dimensions - 1>; 
     friend class Tensor<Type, dimensions + 1>;
-public:
-    //iterator types
 public:
     Tensor() = delete;
 
@@ -27,6 +31,12 @@ public:
         for(int i = 0; i < dimensions; ++i){
             sizes[i] = dim_sizes[i];
             data_size *= dim_sizes[i];
+        }
+
+        int temp = data_size;
+        for(int i = 0; i < dimensions; ++i){
+            temp /= dim_sizes[i];
+            sizes_array[i] = temp;
         }
 
         data = new Type[data_size];
@@ -47,13 +57,14 @@ public:
 
         auto nested = prepare_nested();
         nested->sizes = this->sizes + 1;
+        std::memcpy(&nested->sizes_array[0], &this->sizes_array[1], sizeof(size_t) * (dimensions - 1));
         nested->data  = &this->data[index * sizes[0]];
         nested->data_size = this->data_size / sizes[0];
 
         return *nested;
     }
 
-    size_t dimension_size(){
+    size_t dimension_size() const {
         return sizes[0];
     }
 
@@ -68,18 +79,55 @@ public:
         delete[] sizes;
         delete[] data;
     }
+
+//iterators
+public:
+    //Simple iterator
+    using ForwardIterator  = ContinuousIterator<ContainerType>;
+    //Simple reversed iterator
+    using ReversedIterator = ReversedContinuousIterator<ContainerType>;
+    //Indexed iterator
+    using DimensionsType   = typename std::array<size_t, dimensions>;
+    using IndexedIterator  = TensorIndexedIterator<ContainerType>;
+public:
+
+    ForwardIterator begin() const {
+        return ForwardIterator(data);
+    }
+
+    ForwardIterator end() const {
+        return ForwardIterator(data + data_size);
+    }
+
+    ReversedIterator rbegin() const {
+        return ReversedIterator(data + data_size - 1);
+    }
+
+    ReversedIterator rend() const {
+        return ReversedIterator(data - 1);
+    }
+
+    IndexedIterator ibegin() const {
+        return IndexedIterator(data, &sizes_array, 0);
+    }
+
+    IndexedIterator iend() const {
+        return IndexedIterator(data + data_size, &sizes_array, data_size);
+    }
+
 protected:
     bool isNested;
 protected:
     Type* data;
     size_t data_size;
     size_t* sizes;
+    std::array<size_t, dimensions> sizes_array;
 };
 
 template <class Type>
 class Tensor<Type, 1> {
 public:
-    using ClassType = Tensor<Type, 1>;
+    using ContainerType = Tensor<Type, 1>;
     friend class Tensor<Type, 2>;
 public:
     Tensor() = delete;
@@ -95,7 +143,7 @@ public:
         data = new Type[data_size];
     }
 
-    Type& operator [](size_t index) const {
+    Type& operator [](size_t index) {
         if(index >= sizes[0]){
             throw std::runtime_error("Indexing error: out of bounds");
         }
@@ -118,6 +166,33 @@ public:
         delete[] sizes;
         delete[] data;
     }
+
+//iterators
+public:
+    //Simple iterator
+    using ForwardIterator  = ContinuousIterator<ContainerType>;
+    //Simple reversed iterator
+    using ReversedIterator = ReversedContinuousIterator<ContainerType>;
+    //Indexed iterator
+    using DimensionsType      = typename std::array<size_t, 1>;
+public:
+
+    ForwardIterator begin() const {
+        return ForwardIterator(data);
+    }
+
+    ForwardIterator end() const {
+        return ForwardIterator(data + data_size);
+    }
+
+    ReversedIterator rbegin() const {
+        return ReversedIterator(data + data_size - 1);
+    }
+
+    ReversedIterator rend() const {
+        return ReversedIterator(data - 1);
+    }
+
 protected:
     bool isNested;
 protected:
