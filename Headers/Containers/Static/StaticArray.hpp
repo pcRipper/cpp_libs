@@ -2,19 +2,21 @@
 #include "../Iterators/ContinuousIterator.hpp"
 #include "../Iterators/ReversedContinuousIterator.hpp"
 
+#include <cstring>
+
 /// @brief Array with predefined max size
 /// @tparam Type Generic content type of the array
 /// @tparam capacity Max capacity of the array
-template <int capacity, class Type = int>
+template <int Capacity, class Type = int>
 class StaticArray {
 public:
     using ValueType = Type;
-    using ContainerType = StaticArray<capacity, Type>;
+    using ContainerType = StaticArray<Capacity, Type>;
     //Forwar iterator
     using ForwardIterator = ContinuousIterator<ContainerType>;
     //Reversed iterator
     using ReversedIterator = ReversedContinuousIterator<ContainerType>;
-    static const int max_capacity = capacity;
+    static const int max_capacity = Capacity;
 protected:
     Type array[max_capacity];
     int currentSize;
@@ -24,6 +26,14 @@ public:
     StaticArray(){
         currentSize = 0;
         memset(array, 0, sizeof(Type) * ContainerType::max_capacity);
+    }
+
+    StaticArray(Type const& value){
+        currentSize = ContainerType::max_capacity;
+        
+        for(int i = 0; i < ContainerType::max_capacity; ++i){
+            memcpy(&array[i], &value, sizeof(Type));
+        }
     }
 
     int size(){
@@ -82,5 +92,5 @@ public:
     virtual ~StaticArray() = default;
 };
 
-template <int capacity, class Type>
-Type StaticArray<capacity, Type>::defaultValue = Type();
+template <int Capacity, class Type>
+Type StaticArray<Capacity, Type>::defaultValue = Type();
