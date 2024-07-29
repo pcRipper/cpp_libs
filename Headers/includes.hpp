@@ -6,10 +6,12 @@
 #include <fstream>
 #include <sstream>
 
+#include <cstdint>
 #include <ctime>
 #include <math.h>
 #include <numeric>
 
+#include <cstring>
 #include <string>
 #include <cctype>
 #include <cstring>
