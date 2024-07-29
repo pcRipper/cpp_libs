@@ -27,11 +27,11 @@ public:
             else return(nullptr);
         }
     }
-    unsigned __int64 count = 0;
+    uint64_t count = 0;
     int getRamSize(int size);
     void showObjectSize();
     bool includes(int size, TArr* arr, SubSet* object);
-    unsigned __int64 add(int size, TArr* arr, bool check);
+    uint64_t add(int size, TArr* arr, bool check);
     void show(SubSet* obj);
     void drop(SubSet* startObject);
     ~Set() {
@@ -46,13 +46,13 @@ int Set<TArr>::getRamSize(int size) {
 
 template <typename TArr>
 void Set<TArr>::showObjectSize() {
-    unsigned __int64 RASetize = 0;
+    uint64_t RASetize = 0;
     if (head != nullptr) {
         for (current = head; current != nullptr; current = current->next)RASetize += this->getRamSize(current->size);
     }
-    unsigned __int64 mB = RASetize / 1048576;
-    unsigned __int64 kB = RASetize % 1048576 / 1024;
-    unsigned __int64 B = RASetize % 1024;
+    uint64_t mB = RASetize / 1048576;
+    uint64_t kB = RASetize % 1048576 / 1024;
+    uint64_t B = RASetize % 1024;
     std::cout << RASetize << " = " << mB << "," << kB << "," << B << "\n\n";
 }
 
@@ -90,7 +90,7 @@ bool Set<TArr>::includes(int size, TArr* arr, SubSet* object) {
 }
 
 template <typename TArr>
-unsigned __int64 Set<TArr>::add(int size, TArr* arr, bool check) {
+uint64_t Set<TArr>::add(int size, TArr* arr, bool check) {
     if (head == nullptr) {
         head = new SubSet(size, arr);
     }
@@ -146,7 +146,7 @@ void Set<TArr>::drop(SubSet* startObject) {
 template <typename TArr>
 void setSubs(Set<TArr>& object, int size, TArr* arr,int end,int start = 1) {
     if (size > 0 && arr != nullptr && 0 < start && start <= size && 0 < end && end <= size && start <= end) {
-        unsigned __int64 RASetize = 0;
+        uint64_t RASetize = 0;
         int* numArray;
         TArr* newArray;
         for (int currentSize = start; currentSize <= end; currentSize++) {
