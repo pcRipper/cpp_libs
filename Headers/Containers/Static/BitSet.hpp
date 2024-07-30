@@ -56,7 +56,7 @@ public:
 
     void operator |=(BitSet<size>& right) {
         for (int i = 0; i < ARRAY_SIZE; ++i) {
-            result[i] = bits[i] | right.bits[i];
+            bits[i] |= right.bits[i];
         }
     }
 
