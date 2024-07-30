@@ -22,39 +22,46 @@ public:
     friend class Tensor<Type, dimensions + 1>;
 
 protected:
-    Tensor() = default;
+    Tensor() = delete;
+
+    Tensor( 
+        size_t *sizes, 
+        size_t *offsets_array,
+        size_t data_size
+    ):
+        is_nested(true),
+        sizes(sizes),
+        offsets_array(offsets_array),
+        data_size(data_size),
+        nested(NextDimensionType(sizes + 1, offsets_array + 1, data_size / sizes[0]))
+    {
+
+    }
 
 public:
     Tensor(std::array<size_t, dimensions> const dim_sizes):
-        is_nested(false)
-    {
-        sizes = new size_t[dimensions];
-        data_size = 1;
-        for(int i = 0; i < dimensions; ++i){
-            sizes[i] = dim_sizes[i];
-            data_size *= dim_sizes[i];
-        }
+        is_nested(false),
+        sizes(new size_t[dimensions]),
+        offsets_array(new size_t[dimensions]),
+        data_size([&]() -> size_t {
+            size_t res = 1;
+            for(int i = 0; i < dimensions; ++i){
+                offsets_array[dimensions - i - 1] = res;
+                sizes[i] = dim_sizes[i];
+                res *= dim_sizes[i];
+            }
+            return res;
+        }()),
+        data(new Type[data_size]),
+        nested(NextDimensionType(sizes + 1, offsets_array + 1, data_size / sizes[0]))
+    {}
 
-        int temp = data_size;
-        for(int i = 0; i < dimensions; ++i){
-            temp /= dim_sizes[i];
-            sizes_array[i] = temp;
-        }
-
-        data = new Type[data_size];        
-    }
-
-    auto operator [](size_t index) const {
+    NextDimensionType& operator [](size_t index) {
         if(index >= sizes[0]){
             throw std::runtime_error("Indexing error: out of bounds");
         }
         
-        NextDimensionType nested = NextDimensionType();
-        nested.is_nested = true;
-        nested.sizes = this->sizes + 1;
-        std::memcpy(&nested.sizes_array[0], &this->sizes_array[1], sizeof(size_t) * (dimensions - 1));
-        nested.data_size = this->data_size / sizes[0];
-        nested.data = &this->data[index * sizes[0]];
+        nested.data = &this->data[index * offsets_array[0]];
         
         return nested;
     }
@@ -73,6 +80,7 @@ public:
         if(is_nested)return;
         delete[] sizes;
         delete[] data;
+        delete[] offsets_array;
     }
 
 //iterators
@@ -102,21 +110,21 @@ public:
         return ReversedIterator(data - 1);
     }
 
-    IndexedIterator ibegin() const {
-        return IndexedIterator(data, &sizes_array, 0);
-    }
+    // IndexedIterator ibegin() const {
+    //     return IndexedIterator(data, &offsets_array, 0);
+    // }
 
-    IndexedIterator iend() const {
-        return IndexedIterator(data + data_size, &sizes_array, data_size);
-    }
+    // IndexedIterator iend() const {
+    //     return IndexedIterator(data + data_size, &offsets_array, data_size);
+    // }
 
 protected:
     bool is_nested;
-protected:
-    Type* data;
-    size_t data_size;
     size_t* sizes;
-    std::array<size_t, dimensions> sizes_array;
+    size_t* offsets_array;
+    size_t data_size;
+    Type* data;
+    NextDimensionType nested;
 };
 
 template <class Type>
@@ -126,22 +134,26 @@ public:
     friend class Tensor<Type, 2>;
 
 protected:
-    Tensor() = default;
+    Tensor() = delete;
+
+    Tensor( 
+        size_t *sizes, 
+        size_t *offsets_array,
+        size_t data_size
+    ):
+        is_nested(true),
+        data_size(data_size)
+    {}
 
 public:
-    Tensor(std::array<size_t, 1> const dim_sizes):
-        is_nested(false)
-    {
-        sizes = new size_t[1];
-        sizes[0] = dim_sizes[0];
-
-        data_size = dim_sizes[0];
-
-        data = new Type[data_size];
-    }
+    Tensor(size_t data_size):
+        is_nested(false),
+        data_size(size),
+        data(new Type[size])
+    {}
 
     Type& operator [](size_t index) {
-        if(index >= sizes[0]){
+        if(index >= data_size){
             throw std::runtime_error("Indexing error: out of bounds");
         }
 
@@ -149,7 +161,7 @@ public:
     }
 
     size_t dimension_size(){
-        return sizes[0];
+        return data_size;
     }
 
     void fill(Type const value){
@@ -160,7 +172,6 @@ public:
 
     ~Tensor(){
         if(is_nested)return;
-        delete[] sizes;
         delete[] data;
     }
 
@@ -191,19 +202,15 @@ public:
         return ReversedIterator(data - 1);
     }
 
-    IndexedIterator ibegin() const {
-        return IndexedIterator(data, &sizes_array, 0);
-    }
+    // IndexedIterator ibegin() const {
+    //     return IndexedIterator(data, &offsets_array, 0);
+    // }
 
-    IndexedIterator iend() const {
-        return IndexedIterator(data + data_size, &sizes_array, data_size);
-    }
-
+    // IndexedIterator iend() const {
+    //     return IndexedIterator(data + data_size, &offsets_array, data_size);
+    // }
 protected:
     bool is_nested;
-protected:
-    Type* data;
     size_t data_size;
-    size_t* sizes;
-    std::array<size_t, 1> sizes_array;
+    Type* data;
 };
