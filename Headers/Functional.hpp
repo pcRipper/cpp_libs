@@ -82,4 +82,6 @@ namespace Functions {
 
 	pair<vector<int>*, vector<vector<int>>*> topological_sort(int n, vector<vector<int>> const& directedGraph);
 
+	size_t cantor_pairing(size_t x, size_t y);
+
 }

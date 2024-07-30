@@ -69,3 +69,8 @@ pair<vector<int>*, vector<vector<int>>*> Functions::topological_sort(int n, vect
 
 	return {result, connections};
 }
+
+size_t Functions::cantor_pairing(size_t x, size_t y){
+    if(++x > ++y)swap(x, y);
+    return (x * (x + 3 + 2 * y) + y * (y + 1)) / 2;
+}
