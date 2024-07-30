@@ -16,11 +16,12 @@ public:
     static_assert(dimensions > 0, "Template parameter must be greater than 0");
 public:
     //general aliases
-    using ValueType          = Type;
-    using ContainerType      = Tensor<Type, dimensions>;
-    using NextDimensionType  = Tensor<Type, dimensions - 1>; 
-    friend class Tensor<Type, dimensions + 1>;
+    using ValueType                    = Type;
+    using ContainerType                = Tensor<Type, dimensions>;
+    using NextDimensionType            = Tensor<Type, dimensions - 1>;
+    static constexpr size_t Dimensions = dimensions;
 
+    friend class Tensor<Type, dimensions + 1>;
 protected:
     Tensor() = delete;
 
@@ -90,7 +91,6 @@ public:
     //Simple reversed iterator
     using ReversedIterator = ReversedContinuousIterator<ContainerType>;
     //Indexed iterator
-    using DimensionsType   = typename std::array<size_t, dimensions>;
     using IndexedIterator  = TensorIndexedIterator<ContainerType>;
 public:
 
@@ -110,13 +110,13 @@ public:
         return ReversedIterator(data - 1);
     }
 
-    // IndexedIterator ibegin() const {
-    //     return IndexedIterator(data, &offsets_array, 0);
-    // }
+    IndexedIterator ibegin() const {
+        return IndexedIterator(data, offsets_array, 0);
+    }
 
-    // IndexedIterator iend() const {
-    //     return IndexedIterator(data + data_size, &offsets_array, data_size);
-    // }
+    IndexedIterator iend() const {
+        return IndexedIterator(data + data_size, offsets_array, data_size);
+    }
 
 protected:
     bool is_nested;
@@ -130,7 +130,10 @@ protected:
 template <class Type>
 class Tensor<Type, 1> {
 public:
-    using ContainerType = Tensor<Type, 1>;
+    using ValueType                    = Type;
+    using ContainerType                = Tensor<Type, 1>;
+    static constexpr size_t Dimensions = 1;
+    
     friend class Tensor<Type, 2>;
 
 protected:
@@ -142,14 +145,16 @@ protected:
         size_t data_size
     ):
         is_nested(true),
-        data_size(data_size)
+        data_size(data_size),
+        offsets(1)
     {}
 
 public:
-    Tensor(size_t data_size):
+    Tensor(size_t size):
         is_nested(false),
         data_size(size),
-        data(new Type[size])
+        data(new Type[size]),
+        offsets(1)
     {}
 
     Type& operator [](size_t index) {
@@ -182,7 +187,6 @@ public:
     //Simple reversed iterator
     using ReversedIterator = ReversedContinuousIterator<ContainerType>;
     //Indexed iterator
-    using DimensionsType   = typename std::array<size_t, 1>;
     using IndexedIterator  = TensorIndexedIterator<ContainerType>;
 public:
 
@@ -202,15 +206,16 @@ public:
         return ReversedIterator(data - 1);
     }
 
-    // IndexedIterator ibegin() const {
-    //     return IndexedIterator(data, &offsets_array, 0);
-    // }
+    IndexedIterator ibegin() const {
+        return IndexedIterator(data, &offsets, 0);
+    }
 
-    // IndexedIterator iend() const {
-    //     return IndexedIterator(data + data_size, &offsets_array, data_size);
-    // }
+    IndexedIterator iend() const {
+        return IndexedIterator(data + data_size, &offsets, data_size);
+    }
 protected:
     bool is_nested;
     size_t data_size;
+    size_t offsets;
     Type* data;
 };

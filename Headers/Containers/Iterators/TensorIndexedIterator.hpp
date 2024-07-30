@@ -14,8 +14,7 @@ template <class Container>
 class TensorIndexedIterator {
 public:
     using ValueType      = typename Container::ValueType;
-    using DimensionsType = typename Container::DimensionsType; 
-    using IndexedType    = IndexedValue<ValueType, DimensionsType>;
+    using IndexedType    = IndexedValue<ValueType, array<size_t, Container::Dimensions>>;
 
     using PointerType  = IndexedType*;
     using ReferenceType = IndexedType&;
@@ -23,7 +22,7 @@ public:
 public:
     TensorIndexedIterator() = delete;
 
-    TensorIndexedIterator(ValueType* pointer, DimensionsType const* sizes, size_t offset):
+    TensorIndexedIterator(ValueType* pointer, size_t const* sizes, size_t offset):
         pointer(pointer),
         sizes(sizes),
         offset(offset)
@@ -74,16 +73,16 @@ protected:
 
     void prepareIteratorValue(){
         size_t t_offset = offset;
-        for(size_t i = 0; i < sizes->size(); ++i){
-            iteratorValue.index[i] = t_offset / (*sizes)[i];
-            t_offset %= (*sizes)[i];
+        for(size_t i = 0; i < Container::Dimensions; ++i){
+            iteratorValue.index[i] = t_offset / sizes[i];
+            t_offset %= sizes[i];
         }
         iteratorValue.value = pointer;
     }
 
 protected:
     size_t offset;
-    DimensionsType const* sizes;
+    size_t const* sizes;
     ValueType* pointer;
     IndexedType iteratorValue;
 };
