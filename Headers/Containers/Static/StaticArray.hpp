@@ -1,14 +1,17 @@
 #pragma once
 #include "../Iterators/ContinuousIterator.hpp"
 #include "../Iterators/ReversedContinuousIterator.hpp"
+#include "../FunctionalContainer.hpp"
 
 #include <cstring>
+#include <utility>
 
 /// @brief Array with predefined max size
 /// @tparam Type Generic content type of the array
 /// @tparam capacity Max capacity of the array
 template <int Capacity, class Type = int>
-class StaticArray {
+class StaticArray
+{
 public:
     using ValueType = Type;
     using ContainerType = StaticArray<Capacity, Type>;
@@ -16,22 +19,20 @@ public:
     using ForwardIterator = ContinuousIterator<ContainerType>;
     //Reversed iterator
     using ReversedIterator = ReversedContinuousIterator<ContainerType>;
-    static const int max_capacity = Capacity;
-protected:
-    Type array[max_capacity];
-    int currentSize;
 
-    static Type defaultValue;
+    using FunctionalContainerType = FunctionalContainer<ContainerType, ForwardIterator>;
 public:
-    StaticArray(){
-        currentSize = 0;
-        memset(array, 0, sizeof(Type) * ContainerType::max_capacity);
+    StaticArray(int size = 0): functions(this)
+    {
+        currentSize = std::min(Capacity, std::max(0, size));
+        memset(array, 0, sizeof(Type) * Capacity);
     }
 
-    StaticArray(Type const& value){
-        currentSize = ContainerType::max_capacity;
+    StaticArray(Type const& value) : functions(this)
+    {
+        currentSize = Capacity;
         
-        for(int i = 0; i < ContainerType::max_capacity; ++i){
+        for(int i = 0; i < Capacity; ++i){
             memcpy(&array[i], &value, sizeof(Type));
         }
     }
@@ -40,17 +41,27 @@ public:
         return currentSize;
     }
 
+    void fill(Type const& value){
+        for(int i = 0; i < currentSize; ++i){
+            memcpy(&array[i], &value, sizeof(Type));
+        }
+    }
+
     int capacity(){
-        return ContainerType::max_capacity;
+        return Capacity;
+    }
+
+    void mapOn(std::function<void(Type&)> transformer){
+        functions.mapOn(transformer);
     }
 
     virtual void push_back(Type element){
-        if(currentSize == ContainerType::max_capacity)return;
+        if(currentSize == Capacity)return;
         array[currentSize++] = element;
     }
 
     virtual void emplace_back(Type&& element){
-        if(currentSize == ContainerType::max_capacity)return;
+        if(currentSize == Capacity)return;
         array[currentSize++] = std::move(element);
     }
 
@@ -65,7 +76,7 @@ public:
     }
 
     virtual Type& operator[](int index){
-        if(index >= ContainerType::max_capacity)return defaultValue;
+        if(index >= Capacity)return defaultValue;
         return array[index];
     }
 
@@ -90,6 +101,13 @@ public:
     }
 
     virtual ~StaticArray() = default;
+
+protected:
+    Type array[Capacity];
+    int currentSize;
+
+    FunctionalContainerType functions;
+    static Type defaultValue;
 };
 
 template <int Capacity, class Type>
