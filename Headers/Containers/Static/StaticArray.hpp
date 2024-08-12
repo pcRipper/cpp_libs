@@ -1,6 +1,7 @@
 #pragma once
 #include "../Iterators/ContinuousIterator.hpp"
 #include "../Iterators/ReversedContinuousIterator.hpp"
+#include "../Iterators/IndexedContinuousIterator.hpp"
 #include "../FunctionalContainer.hpp"
 
 #include <cstring>
@@ -19,7 +20,9 @@ public:
     using ForwardIterator = ContinuousIterator<ContainerType>;
     //Reversed iterator
     using ReversedIterator = ReversedContinuousIterator<ContainerType>;
-
+    //Indexed iterator
+    using IndexedIterator = IndexedContinuousIterator<ContainerType>;
+    //Functional expansion
     using FunctionalContainerType = FunctionalContainer<ContainerType, ForwardIterator>;
 public:
     StaticArray(int size = 0): functions(this)
@@ -98,6 +101,14 @@ public:
 
     ReversedIterator rend(){
         return ReversedIterator(array - 1);
+    }
+
+    IndexedIterator ibegin(){
+        return IndexedIterator(array, 0);
+    }
+
+    IndexedIterator iend(){
+        return IndexedIterator(array + currentSize, currentSize);
     }
 
     virtual ~StaticArray() = default;
