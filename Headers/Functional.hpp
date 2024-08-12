@@ -1,6 +1,7 @@
 #pragma once
 #include "includes.hpp"
 #include <cstdint>
+#include <chrono>
 
 namespace Functions {
 
@@ -84,4 +85,38 @@ namespace Functions {
 
 	size_t cantor_pairing(size_t x, size_t y);
 
+	template<typename Func, typename... Args>
+	uint64_t test(Func&& func, Args&&... args) {
+		uint64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
+			std::chrono::system_clock::now().time_since_epoch()
+		).count();
+
+		std::invoke(func, args...);
+
+		uint64_t  finish = std::chrono::duration_cast<std::chrono::milliseconds>(
+			std::chrono::system_clock::now().time_since_epoch()
+		).count();
+		return finish - start;
+	}
+
+	template<typename Func, typename... Args>
+	double testN(uint32_t n, Func&& func, Args&&... args){
+		double sum = 0;
+
+		for(int i = 0; i < n; ++i){
+			uint64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
+				std::chrono::system_clock::now().time_since_epoch()
+			).count();
+
+			std::invoke(func, args...);
+
+			uint64_t  finish = std::chrono::duration_cast<std::chrono::milliseconds>(
+				std::chrono::system_clock::now().time_since_epoch()
+			).count();
+
+			sum += finish - start;
+		}
+
+		return sum / n;
+	}
 }
