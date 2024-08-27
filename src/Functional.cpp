@@ -1,4 +1,4 @@
-#include "../Headers/Functional.hpp"
+#include <general_libs/Functional.hpp>
 
 size_t Functions::gcd(size_t a, size_t b)
 {

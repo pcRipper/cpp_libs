@@ -1,4 +1,4 @@
-#include "../../../Headers/Containers/Dynamic/Sets.hpp"
+#include <general_libs/Containers/Dynamic/Sets.hpp>
 
 size_t setSubs2(int* arr, size_t size, size_t end, size_t start) {
     size_t count = 0;

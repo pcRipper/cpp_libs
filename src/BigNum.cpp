@@ -1,4 +1,4 @@
-#include "../Headers/BigNum.hpp"
+#include <general_libs/BigNum.hpp>
 #include <map>
 #include <functional>
 
@@ -114,40 +114,6 @@ BigNum BigNum::operator*(const BigNum& obj){
 	
 	return result;
 }
-
-
-class Date{};
-
-
-class Report {};
-class DataTable{};
-class Measurement{};
-
-class ORM {
-public:
-	void connect(map<string, string> settings);
-	DataTable getData(function<bool(const Measurement& obj)> predicate);
-};
-
-class Statistic {
-public:
-	void mean(DataTable* data);
-	void sd(DataTable* data);
-	void correlation(DataTable* data, int c1, int c2);
-};
-
-class ReportComposer {
-public:
-	Report composeReportPDF(DataTable* data);
-	Report composeReportDOCX(DataTable* data);
-};
-
-class ReportCreator {
-public:
-	static Report createReport(int ID_Station, Date From, Date To);
-};
-
-
 
 BigNum::~BigNum(){}
 
