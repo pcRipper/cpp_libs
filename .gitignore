@@ -1,2 +1,55 @@
-/.vscode/
-/.vs/
+# Ignore editor-specific files
+.vscode/
+.vs/
+.idea/
+
+# Ignore build files
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Ignore generated files
+*.cmake
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.exe
+*.out
+*.a
+*.lib
+*.lo
+*.la
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+*.swp
+*.bak
+*.old
+
+# Ignore dependency directories
+deps/
+external/
+
+# Ignore test and coverage files
+*.gcda
+*.gcno
+*.gcov
+*.profraw
+*.profdata
+
+# Ignore package files
+*.deb
+*.rpm
+*.tar.gz
+*.zip
+*.7z
+*.bz2
+*.xz
+*.tgz
+*.txz
+*.zst
