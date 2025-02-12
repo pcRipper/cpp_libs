@@ -119,4 +119,55 @@ namespace Functions {
 
 		return sum / n;
 	}
+
+	
+	template<typename Iterator>
+	std::string join(Iterator begin, Iterator end, std::string separator)
+	{
+		std::string result = "";
+		while(begin != end)
+		{
+			result += to_string(*begin);
+			if(++begin != end)
+			{
+				result += separator;
+			}
+		}
+
+		return result;
+	}
+
+	std::vector<string> split(std::string text, std::string separator)
+	{
+		const int SIZE = static_cast<int>(text.length());
+		const int SEPARATOR_SIZE = static_cast<int>(separator.length());
+
+		std::vector<int> prefix_sum(SIZE + 1, 0);
+		
+		const int SEPARATOR_SUM = accumulate(separator.begin(), separator.end(), 0);
+		int prefix = 0;
+		string current_word;
+
+		std::vector<std::string> splited;
+		for(int i = 0; i < SIZE; ++i)
+		{
+			prefix_sum[i + 1] = prefix_sum[i] + text[i];
+			current_word.push_back(text[i]);
+
+			if(i + 1 < SEPARATOR_SIZE)
+			{
+				continue;
+			}
+
+			if(prefix_sum[i + 1] - prefix_sum[i + 1 - SEPARATOR_SIZE] == SEPARATOR_SUM)
+			{
+				splited.push_back(current_word.substr(0, current_word.length() - SEPARATOR_SIZE));
+				current_word = "";
+			}
+		}
+
+		splited.push_back(current_word);
+
+		return splited;
+	}
 }
