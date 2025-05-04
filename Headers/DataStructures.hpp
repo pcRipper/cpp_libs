@@ -1,5 +1,5 @@
 #pragma once
-#include "../../GeneralLibs/Headers/includes.hpp"
+#include <general_libs/includes.hpp>
 
 #pragma region to_string  
 
