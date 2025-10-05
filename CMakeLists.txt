@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(LeetCodeLibs VERSION 0.1)
 
+set(CMAKE_CXX_STANDARD 23)
 
 file(GLOB_RECURSE HEADER_FILES ".//Headers//*.hpp")
 file(GLOB_RECURSE SOURCE_FILES ".//Source//*.cpp")
